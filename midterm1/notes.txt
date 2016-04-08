@@ -1,0 +1,126 @@
+(1) Regex:
+	1. Use https://regex101.com/
+	2. Enter all test cases
+	3. Formulate regex expression
+
+(2) POS tagging:
+	1. Use pos_script.py from the terminal: ```python pos_script.py "your string"
+
+(3) Mark noun groups with BIO tagging:
+	1. NP --> N, so mark any nouns as "B"
+	2. For noun phrases, the first word is "B" and anything else within the NP is an "I"
+	3. For anything not a noun or in a noun phrase, mark as "O"
+
+(4) Phrase Structure Tree:
+	1. Run the sentence through the POS tagger.
+	2. Generally, we know that S --> NP VP. Usually our sentence can be easily separated into two parts: subject 
+       and predicate. [John and Mary] [bought a refrigerator with three doors]. Obviously you should know the merge
+       rules but you can also make your tree then make your rules afterwards, so:
+		NP --> NNP ("John", "Mary")
+		NP --> NNP CC NNP ("John and Mary")
+		...
+		etc.
+
+(5) Precision, recall, f-measure
+	1. Precision = (Matches between system report and answer key) / (Number of system report)
+	2. Recall = (Matches between system report and answer key) / (Number of answer key)
+	3. F-measure = (1) / ( (1/2) (1/precision + 1/recall) )
+	
+(6) CKY Chart
+	Use the rules in order to determine how the sentence is formed
+	1. Mark the indices within the sentence:
+		|  The  |  rain  |  rains  |  down  |
+		0	    1	     2		    3        4 
+	2. Fill out the CKY Chart diagonal in accordance with the rules given
+	3. Fill in the rest of the chart, incrementally adding more to the sentence. After a while,
+	   you'll notice that the chart can be broken up into 4 quadrants:
+		1. N/A (The lower left corner of the chart -- it's never filled in)
+		2. Verb Phrase (The lower right of the chart -- since our sentences go NP then VP)
+		3. Noun Phrase (The top left of the chart -- since our sentences go NP then VP)
+		4. Sentences (S) (The top right of the chart -- since S --> NP VP)
+
+(7) Organization and Entity Tagging
+	Using the definitions given, use your best judgement to mark what's a special 
+    (entity/organization/part of speech).
+
+(8) Phrase Structure rules
+	We'll be given a regular expression and you just have to create a set of phrase structure
+    rules based on that expression. For example:
+	Regex: ''(big|small|little|no|some|any) ([^ ]+ ) (on|from|by|of) (the|a)''
+	We note that, from the list of words matched, we have:
+		JJ     --> one of {big, small, little, no, some, any}
+		Word   --> one of {a, b, c, ..., z} Word
+		effect --> effect
+		PRP    --> one of {on, from, by, of}
+		DET    --> one of {the, a}
+		S      --> JJ Word effect PRP DET
+		S      --> JJ effect PRP DET
+
+(9) Tokenization / Index offset
+	Use tokenization script from the terminal: ```python token_indicies.py "your string"
+
+(10) Finite state / Viterbi
+	(a) Calculate the likelihood probabilities for each word given each POS
+		1. Given training data, write down all POS found
+		2. For each part of speech, note what instances are found (e.g.: VBZ --> is, are, saw, planes)
+		3. For each instance, note note the number of times it occured, e.g.:
+			VBZ --> is     (1/4)
+					are	   (1/4)
+					saw    (1/4)
+					planes (1/4)
+			...
+	(b) Draw a finite state machine where states are POS and edges are labeled with transition probabilities
+		1. Starting with "START", note how each sentence begins and label the probabilities therein, e.g.:
+			START --> NNS (1/4)
+					  JJ  (1/4)
+					  PRP (1/2)
+		2. From there, do a BFS-like search outwards. Look for all NNS and what succeeds each instance of NNS. 
+		   Make those connections. Queue up those successions, then work on JJ. Etc. etc.
+	(c) Draw a chart/table where the columns are positions in the sentence and the rows...fill in the probability 
+        scores assigned by the Viterbi algorithm assigning POS tags to the string flying planes.
+		1. Draw a table with the column "State". Notice that you're given a "test string" (on the midterm, this
+		   was flying planes) -- get the length of that test string in number of words (n). Draw n + 1 more columns.
+		   (So if you had flying planes, draw columns from 0 to 3, representing "Start", "flying", "planes", "end".
+		2. Each row under 'State' should be in the following order:
+			START
+			NNS
+			(other POS)
+			...
+			END
+		3. So we know every sentence starts with "Start", so the state "Start" at column 0 
+           (representing index 0 in our sentence) has probability 1
+		4. From there, consider our first word ("flying"). We note that flying is seen a total of three times. 
+		   Of those three times, it is seen once as a JJ and twice as a VBG. Then, we look at 
+           the probability of Start going right to either JJ (1/4) or VBG (0). So, we multiply (FOR JJ: 1/3 * 1/4), 
+           write that value into our "flying" column's JJ row, and multiply (FOR VBG: 1/3 * 0) and write that value
+           into into our "flying" column's VBG row. Repeat the process for planes: count number of times 
+		   it's been seen, of those times how many was it a NNS/VBZ, and note the probability of each possible
+		   "flying" (JJ, VBG) going to each possible "planes". Note that since "flying" being a VBG after Start
+		   is of the probability 0, we can eliminate that entire subtree.
+		5. Lastly, we have all of our possible "planes" going to End.
+		6. The probability of the entire string is the product of each step of the probability.
+
+parsetree
+
+(11) TFIDF – Term frequency, inverse document frequency
+	1. We're given N documents and a certain number of terms. 
+	   Each term appears in our collection of N documents m times. 
+	   e.g. 
+		reverse cascade:  3
+		full shower:     50
+		half bath:       10
+		multiplex:        3
+	2. From there, we determine term frequency (TF) by determining, for each term, N/m.
+	   e.g.
+		reverse cascade: 10,000/3  = 3,333
+		full shower:     10,000/50 =   200
+		half bath:       10,000/10 = 1,000
+		multiplex:       10,000/3  = 3,333
+	3. From there, we determine inverse document frequency (IDF) by determining, for each term, log(TF).
+	4. Now, for each term in our term frequencies table, we multiply each column's value by our term's IDF. 
+       Repeat for each term.
+
+Other things to know:
+	Deterministic Finite-State Machine (DFSM)       } Regular Expression matching/states
+	Non-deterministic Finite-State Machine (NDFSM)  }
+	Cosine TFIDF

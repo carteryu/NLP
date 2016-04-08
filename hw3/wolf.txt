@@ -1,0 +1,58 @@
+To view, open in a text editor and disable word wrapping.
+
+Phrase Structure:
+S -> NP VP
+
+NP -> VP NP
+NP -> Noun Verb NP
+NP -> Adv Adj NP
+NP -> Adj NP
+NP -> Noun Prep NP
+NP -> Noun Noun
+NP -> Noun
+NP -> Pronoun
+
+VP -> VP VP
+VP -> VP NP VP
+VP -> Noun Verb Conj
+VP -> Verb Adv Adj
+VP -> Verb
+VP -> Conj Verb
+
+			                                                                S(found)
+			        ___________________________________________________________|_________________________________________________________
+			        |                                                                                                                   |                                              
+			   NP(species)                                                                                                         VP(indicating)
+	       _________|_____________                                                                ______________________________________|_____________________________________________________
+	       |                     |                                                                |                                                                                          |
+	 VP(found)               NP(species)                                                     VP(indicating)                                                                             VP(distinguish)
+	 ______|________             |                                                           _____|__________________________________                      __________________________________|
+	 |     |       |             |                                                           |         |                            |                      |                                 |             
+	Noun Verb     Conj           |                                                          Verb    NP(howl)                      VP(is)                VP(used)                        VP(distinguish) 
+	 |     |       |       ______|____                                                       |     ____|_____              _________|__________     _______|_______                 _________|_________________
+	 |     |       |       |         |                                                       |     |        |              |        |         |     |             |                 |                         |
+	 |     |       |      Adj    NP(spec)                                                    |   Conj     NP(howl)        Verb     Adv       Adj   VP(can)      VP(used)        VP(distinguish)          NP(population)
+	 |     |       |       |  _______|__________                                             |     |   _____|_____         |        |         |   __|___      ____|_____            |             ____________|
+	 |     |       |       |  |      |         |                                             |     |   |         |         |        |         |   |    |      |        |           Verb           |           |
+	 |     |       |       | Noun   Conj   NP(subs)                                          |     |  Noun      Noun       |        |         |  Conj Verb   Verb     VP(used)      |            Adj     NP(population)
+	 |     |       |       |  |      |  _______|_________                                    |     |   |         |         |        |         |   |    |      |   _____|_           |             |     ______|________
+	 |     |       |       |  |      |  |      |        |                                    |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |     |       |       |  |      | Noun  Verb    NP(use)                                 |     |   |         |         |        |         |   |    |      |  Verb  Adv          |             |    Noun  Prep NP(another)
+	 |     |       |       |  |      |  |      |   _____|_______                             |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |     |       |       |  |      |  |      |   |    |      |                             |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |    	Pronoun
+	 |     |       |       |  |      |  |      |   Adv  Adj  NP(use)                         |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |     |       |       |  |      |  |      |   |    |  ____|___________________          |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |     |       |       |  |      |  |      |   |    |  |   |                  |          |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |     |       |       |  |      |  |      |   |    | Noun Prep            NP(howl)      |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |     |       |       |  |      |  |      |   |    |  |   |               ___|___       |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |     |       |       |  |      |  |      |   |    |  |   |__             |     |       |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |     |       |       |  |      |  |      |   |    |  |____ |________   Noun  Noun      |     |   |         |         |        |         |   |    |      |   |     |           |             |     |     |       |
+	 |   __|   ____|  _____|  |      |  |____  |   |__  |____  |________ |___  |__   |_      |     |   |         |         |        |      ___|   |    |  ____|   |     |           |  ___________|  ___|     |       |
+     |   |     |      |       |      |      |  |____ |______ |_______  |___ |___ |__  |_     |     |   |_______  |_____    |_____   |      |      |    |  |    ___| ____|  _________|  |   __________|  ______|       |
+     |   |     |      |       |      |      |      |       |        |     |___ |__ |__ |__   |____ |________  |__     |         |   |      |      |    |  |    |  __|      |      _____|   |      ______|  ___________|
+     |   |     |      |       |      |      |      |       |        |        |   |   |   |       |         |    |     |         |   |      |      |    |  |    |  |        |      |        |      |        |
+	We found that different species and subspecies showed markedly different use of howl types, indicating that howl modulation is not arbitrary, but can be used to distinguish one population from another.
+
+The difficulties I had in assigning a phrase structure lay in trying to efficiently decompose different noun and verb phrases into sequences of other parts of speech without having too many special rules.
+Essentially, the process of creating general grammar rules that worked outside of this sentence was challenging. 
+Much of my time was spent trying to break down long, shallow strings of expansions into deeper, shorter strings, for this was what I believe to be a major factor of generality.
