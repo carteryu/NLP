@@ -12,20 +12,21 @@ def table(input_file):
     table = {} 
     for line in training_set:
         if line.strip():
-            table_add(line)
+            table_add(line, table)
 
-def table_add(line):
+def table_add(line, table):
     s = line.split()
-    token = s[0]
+    token = s[0].lower()
     pos = s[1]
-    entry = table[token]
+    entry = table.get(token)
     if entry:
-        if entry[pos]:
-            entry[pos] += 1
+        entry_pos = table[token].get(pos)
+        if entry_pos: 
+            table[token][pos] += 1
         else:
-            entry[pos] = 1
+            table[token][pos] = 1
     else:
-        entry = {token, pos}
+        table[token] = {pos: 1}
 
 main()
         
