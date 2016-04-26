@@ -8,10 +8,11 @@ print(tagged_tokens)
 
 retrieval = None
 target = None
-verbs = 0
 nouns = 0
+n_types = ['NN', 'NNS', 'NNP', 'NNPS']
 for i in range(len(tagged_tokens)):
-    if 'NNP' in tagged_tokens[i]:
+    token_list = list(tagged_tokens[i])
+    if token_list[1] in n_types: 
         print('yes')
     else:
         print('no')
