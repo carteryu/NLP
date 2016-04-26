@@ -3,3 +3,6 @@ find me John's ID
 find me the ID of John
 ID of John
 
+computer science majors
+John's major
+

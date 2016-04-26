@@ -21,4 +21,9 @@ for i in range(len(tagged_tokens)):
 # else throw some error
 # one table attribute will always be there in the query
 # if one table attribute in query and nothing else then likely a select *
-
+# db schema:
+# table students, columns: first name, last name, ID, major
+# if NNS then column, if not check whether every NN-derivative is a table name
+# if not NNP, it won't be in the form [VB] [NNP] [POS], therefore if there is POS, the format will be [function] [target] [retrieval]
+# otherwise, must be in the form [function] [retrieval] [target]
+# stripped of 's', target will always be a row
