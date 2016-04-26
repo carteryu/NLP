@@ -1,0 +1,5 @@
+different ways to phrase the same select query
+find me John's ID
+find me the ID of John
+ID of John
+
