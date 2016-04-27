@@ -5,10 +5,11 @@ input = raw_input('What are you looking for?\n')
 def parse(input):
     tokens = nltk.word_tokenize(input)
     tagged_tokens = nltk.pos_tag(tokens)
-    print tagged_tokens 
+    print 'tokens:', tagged_tokens 
 
     retrieval = None
     target = None
+    POS = 0
     nouns = 0
     n_types = ['NN', 'NNS', 'NNP', 'NNPS']
     n_list = []
@@ -18,7 +19,10 @@ def parse(input):
         token_list = list(tagged_tokens[i])
         if token_list[1] in n_types: 
             n_list.append(token_list[0])
-    print n_list
+        elif token_list[1] in v_types:
+            v_list.append(token_list[0])
+    print 'noun phrases:', n_list
+    print 'verb phrases:', v_list
 parse(input)
 # assuming the user writes proper english
 # else throw some error
