@@ -7,6 +7,7 @@ def parse(input):
     tagged_tokens = nltk.pos_tag(tokens)
     print 'tokens:', tagged_tokens 
 
+    sql_statement = None
     retrieval = None
     target = None
     POS = 0
@@ -15,6 +16,7 @@ def parse(input):
     n_list = []
     v_types = ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']
     v_list = []
+
     for i in range(len(tagged_tokens)):
         token_list = list(tagged_tokens[i])
         if token_list[1] in n_types: 

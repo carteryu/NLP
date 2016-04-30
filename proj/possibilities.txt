@@ -5,4 +5,5 @@ ID of John
 
 computer science majors
 John's major
+students majoring in computer science
 
