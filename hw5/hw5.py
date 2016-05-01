@@ -33,7 +33,7 @@ def main():
 	sentences = clean(raw, closed_class_stop_words, new_tokens)
 	term_count(sentences, tfidf_vector, word_hash)
 	query_count(sentences, query_hash)
-	calc_tfidf(sentences, tfidf_vector, word_hash, 225)                           
+	calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, 225)                           
 
 def clean(text, closed_class_stop_words, new_tokens):
 	tokens = word_tokenize(text)
@@ -91,14 +91,23 @@ def query_count(sentences, query_hash):
 			else:
 				query_hash[word] = 1
 
-def calc_tfidf(sentences, tfidf_vector, word_hash, total_queries):
+def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 	for sentence in sentences:
-		tfidf_vector.append([])
-		word_vector = {}
+		tfidf_vector.append({})
+		word_vector = []
 		for word in sentence:
 			word = word.lower()
-		 	if tfidf_vector[-1].get(word):
-		 		tfidf_vector[-1][word] 
+			if word in word_vector:
+				tfidf_vector[-1][word][0] += 1
+				tfidf_vector[-1][word][1] = float(total_queries) / float(query_hash[word])
+				tfidf_vector[-1][word][2] = tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1]
+			else:
+				word_vector.append(word)
+				tfidf_vector[-1][word] = [None, None, None]
+				tfidf_vector[-1][word][0] = 1
+				tfidf_vector[-1][word][1] = float(total_queries) / float(query_hash[word])
+				tfidf_vector[-1][word][2] = tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1]
+	print tfidf_vector
 
 
 
