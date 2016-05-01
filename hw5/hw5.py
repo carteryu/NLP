@@ -1,12 +1,10 @@
-import nltk, sys, os, string
+import nltk, string
 from nltk import word_tokenize
-from collections import defaultdict
-
-#tfidf = term frequency (how many times it appears in query) x idf (total number of queries / number of queries where term occurs)
 
 def main():
 	new_tokens = []
 	word_hash = {}
+	query_hash = {}
 	tfidf_vector = []
 	closed_class_stop_words = ['a','the','an','and','or','but','about','above','after','along','amid','among',\
 	                           'as','at','by','for','from','in','into','like','minus','near','of','off','on',\
@@ -34,7 +32,8 @@ def main():
 	raw = file.read()
 	sentences = clean(raw, closed_class_stop_words, new_tokens)
 	term_count(sentences, tfidf_vector, word_hash)
-	calc_tfidf(sentences, tfidf_vector, word_hash)                           
+	query_count(sentences, query_hash)
+	calc_tfidf(sentences, tfidf_vector, word_hash, 225)                           
 
 def clean(text, closed_class_stop_words, new_tokens):
 	tokens = word_tokenize(text)
@@ -47,11 +46,31 @@ def clean(text, closed_class_stop_words, new_tokens):
 			new_tokens[-1].append(token)
 	return new_tokens
 
-# [tf, total queries, queries with term, idf, tfidf]
+# tfidf = term frequency (how many times it appears in query) x idf (total number of queries / number of queries where term occurs)
+
+# separate: queries with term
+
+# tfidf_vector = 
+#[
+#	{
+#		# query 1
+#		word: [tf, idf, tfidf],
+#		word: [tf, idf, tfidf],
+#		word: [tf, idf, tfidf]
+#	},
+#	{
+#		# query 2
+#		word: [tf, idf, tfidf],
+#		word: [tf, idf, tfidf],
+#		word: [tf, idf, tfidf]
+#	},
+#	# etc
+#]
+
+# these modularized functions aren't time-efficient, but this is currently a brute force method to get some functionality whilst staying somewhat bug-free
 
 def term_count(sentences, tfidf_vector, word_hash):
 	for sentence in sentences:
-		tfidf_vector.append([])
 		for word in sentence:
 			word = word.lower()
 			if word_hash.get(word):
@@ -59,9 +78,28 @@ def term_count(sentences, tfidf_vector, word_hash):
 			else:
 				word_hash[word] = 1
 
-def calc_tfidf(sentences, tfidf_vector, word_hash):
-	print(sentences)
-	print(word_hash)
+def query_count(sentences, query_hash):
+	for sentence in sentences:
+		word_vector = []
+		for word in sentence:
+			word = word.lower()
+			if word in word_vector:
+				continue
+			word_vector.append(word)
+			if query_hash.get(word):
+				query_hash[word] += 1
+			else:
+				query_hash[word] = 1
+
+def calc_tfidf(sentences, tfidf_vector, word_hash, total_queries):
+	for sentence in sentences:
+		tfidf_vector.append([])
+		word_vector = {}
+		for word in sentence:
+			word = word.lower()
+		 	if tfidf_vector[-1].get(word):
+		 		tfidf_vector[-1][word] 
+
 
 
 main()
