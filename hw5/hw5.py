@@ -109,6 +109,6 @@ def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 				tfidf_vector[-1][word][2] = tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1]
 	print tfidf_vector
 
-
+# make vector for words in query, initialized to zero
 
 main()
