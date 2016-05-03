@@ -6,6 +6,13 @@ def main():
 	word_hash = {}
 	query_hash = {}
 	tfidf_vector = []
+
+	abstract_new_tokens = []
+	abstract_word_hash  = {}
+	abstract_query_hash = {}
+	abstract_tfidf_vector = []
+
+
 	closed_class_stop_words = ['a','the','an','and','or','but','about','above','after','along','amid','among',\
 	                           'as','at','by','for','from','in','into','like','minus','near','of','off','on',\
 	                           'onto','out','over','past','per','plus','since','till','to','under','until','up',\
@@ -30,10 +37,18 @@ def main():
 	                           ]
 	file = open('cran/cran.qry', 'r')
 	raw = file.read()
+	abstract_file = open('cran/cran.all.1400')
+	abstract_raw = abstract_file.read()
+
 	sentences = clean(raw, closed_class_stop_words, new_tokens)
 	term_count(sentences, tfidf_vector, word_hash)
 	query_count(sentences, query_hash)
-	calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, 225)                           
+	calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, 225)
+
+	abstract_sentences = abstract_clean(abstract_raw, closed_class_stop_words, abstract_new_tokens)
+	abstract_term_count(abstract_sentences, abstract_tfidf_vector, abstract_word_hash)
+	abstract_query_count(abstract_sentences, abstract_query_hash)
+	abstract_calc_tfidf(abstract_sentences, abstract_tfidf_vector, abstract_word_hash, abstract_query_hash, 1400)                           
 
 def clean(text, closed_class_stop_words, new_tokens):
 	tokens = word_tokenize(text)
@@ -45,6 +60,12 @@ def clean(text, closed_class_stop_words, new_tokens):
 		else:
 			new_tokens[-1].append(token)
 	return new_tokens
+
+def abstract_clean(text, closed_class_stop_words, new_tokens):
+	tokens = word_tokenize(text)
+	for token in tokens:
+		for token in tokens:
+			return None
 
 # tfidf = term frequency (how many times it appears in query) x idf (total number of queries / number of queries where term occurs)
 
@@ -78,6 +99,8 @@ def term_count(sentences, tfidf_vector, word_hash):
 			else:
 				word_hash[word] = 1
 
+def abstract_term_count(sentences, tfidf_vector, word_hash):
+	return None
 def query_count(sentences, query_hash):
 	for sentence in sentences:
 		word_vector = []
@@ -90,6 +113,9 @@ def query_count(sentences, query_hash):
 				query_hash[word] += 1
 			else:
 				query_hash[word] = 1
+
+def abstract_query_count(sentences, query_hash):
+	return None
 
 def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 	for sentence in sentences:
@@ -109,6 +135,7 @@ def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 				tfidf_vector[-1][word][2] = tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1]
 	print tfidf_vector
 
-# make vector for words in query, initialized to zero
+def abstract_calf_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
+	return None
 
 main()
