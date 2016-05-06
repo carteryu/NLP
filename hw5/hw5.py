@@ -5,10 +5,12 @@ def main():
 	word_hash = {}
 	query_hash = {}
 	tfidf_vector = []
+	final_query_vector = []
 
 	abstract_word_hash  = {}
 	abstract_query_hash = {}
 	abstract_tfidf_vector = []
+	final_abstract_vector = []
 
 
 	closed_class_stop_words = ['a','the','an','and','or','but','about','above','after','along','amid','among',\
@@ -43,11 +45,15 @@ def main():
 	calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, 225)
 	print 'query tfidf calculated'
 
-	abstract_sentences = abstract_clean(abstract_file, closed_class_stop_words)
-	term_count(abstract_sentences, abstract_word_hash)
-	query_count(abstract_sentences, abstract_query_hash)
-	calc_tfidf(abstract_sentences, abstract_tfidf_vector, abstract_word_hash, abstract_query_hash, 1400)
-	print 'abstract tfidf calculated'                           
+	# abstract_sentences = abstract_clean(abstract_file, closed_class_stop_words)
+	# term_count(abstract_sentences, abstract_word_hash)
+	# query_count(abstract_sentences, abstract_query_hash)
+	# calc_tfidf(abstract_sentences, abstract_tfidf_vector, abstract_word_hash, abstract_query_hash, 1400)
+	# print 'abstract tfidf calculated' 
+
+	query_vector(sentences, tfidf_vector, final_query_vector)
+	cosine_similarity(tfidf_vector, abstract_tfidf_vector)
+	print 'cosine similarity calculated'                          
 
 def clean(text, closed_class_stop_words):
 	line_array = []
@@ -57,7 +63,7 @@ def clean(text, closed_class_stop_words):
 			continue
 		if token.isdigit() and len(token) == 3:
 			line_array.append([])
-		else:
+		elif not re.search(r'\d|\W', token):
 			line_array[-1].append(token)
 	return line_array
 
@@ -106,8 +112,6 @@ def strip(token, closed_class_stop_words):
 #	# etc
 #]
 
-# these modularized functions aren't time-efficient, but this is currently a functional method to get some results whilst staying somewhat bug-free
-
 def term_count(sentences, word_hash):
 	for sentence in sentences:
 		for word in sentence:
@@ -138,6 +142,7 @@ def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 			word = word.lower()
 			# calculate tf, idf, tfidf, and round to three decimal places
 			if word in word_vector:
+				# consider normalizing the term frequencies
 				tfidf_vector[-1][word][0] += 1
 				tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
 				tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
@@ -148,4 +153,62 @@ def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 				tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
 				tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
 
+# query vector = 
+#[
+#	[tfidf value 1, tfidf value 2, tfidf value 3, etc], 
+#	[tfidf value 1, tfidf value 2, tfidf value 3, etc],
+#	[tfidf value 1, tfidf value 2, tfidf value 3, etc],
+#	etc
+#]
+
+def query_vector(sentences, tfidf_vector, final_query_vector):
+	counter = 0
+	for sentence in sentences:
+		final_query_vector.append([])
+		for word in sentence:
+			if tfidf_vector[counter].get(word):
+				final_query_vector[-1].append(tfidf_vector[counter].get(word)[2])
+		counter += 1
+
+# cosine similarity (d1, d2) =  dot product(d1, d2) / ||d1|| * ||d2||
+
+def cosine_similarity(tfidf_vector, abstract_tfidf_vector):
+	return None
+
 main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
