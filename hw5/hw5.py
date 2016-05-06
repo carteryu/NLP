@@ -45,13 +45,14 @@ def main():
 	calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, 225)
 	print 'query tfidf calculated'
 
-	# abstract_sentences = abstract_clean(abstract_file, closed_class_stop_words)
-	# term_count(abstract_sentences, abstract_word_hash)
-	# query_count(abstract_sentences, abstract_query_hash)
-	# calc_tfidf(abstract_sentences, abstract_tfidf_vector, abstract_word_hash, abstract_query_hash, 1400)
-	# print 'abstract tfidf calculated' 
+	abstract_sentences = abstract_clean(abstract_file, closed_class_stop_words)
+	term_count(abstract_sentences, abstract_word_hash)
+	query_count(abstract_sentences, abstract_query_hash)
+	calc_tfidf(abstract_sentences, abstract_tfidf_vector, abstract_word_hash, abstract_query_hash, 1400)
+	print 'abstract tfidf calculated' 
 
 	query_vector(sentences, tfidf_vector, final_query_vector)
+	abstract_vector(sentences, abstract_tfidf_vector, final_query_vector, final_abstract_vector)
 	cosine_similarity(tfidf_vector, abstract_tfidf_vector)
 	print 'cosine similarity calculated'                          
 
@@ -169,6 +170,39 @@ def query_vector(sentences, tfidf_vector, final_query_vector):
 			if tfidf_vector[counter].get(word):
 				final_query_vector[-1].append(tfidf_vector[counter].get(word)[2])
 		counter += 1
+
+# abstract vector = 
+#[
+#	[
+#		[tfidf value 1, tfidf value 2, tfidf value 3, etc], 
+#		[tfidf value 1, tfidf value 2, tfidf value 3, etc],
+#		[tfidf value 1, tfidf value 2, tfidf value 3, etc],
+#		etc
+#	],
+#	[
+#		[tfidf value 1, tfidf value 2, tfidf value 3, etc], 
+#		[tfidf value 1, tfidf value 2, tfidf value 3, etc],
+#		[tfidf value 1, tfidf value 2, tfidf value 3, etc],
+#		etc
+#	],
+#	etc
+#]
+
+def abstract_vector(sentences, abstract_tfidf_vector, final_query_vector, final_abstract_vector):
+	counter = 0
+	for sentence in sentences:
+		final_abstract_vector.append([])
+		for abstract in abstract_tfidf_vector:
+		 	final_abstract_vector[-1].append([])
+		 	for word in sentence:
+		 		final_abstract_vector[-1][-1].append(word)
+		 		if abstract.get(word):
+					final_abstract_vector[-1][-1].append(abstract.get(word)[2])
+		 		else:
+		 			final_abstract_vector[-1][-1].append(0)
+		 	counter += 1
+	print final_abstract_vector
+
 
 # cosine similarity (d1, d2) =  dot product(d1, d2) / ||d1|| * ||d2||
 
