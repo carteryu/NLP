@@ -1,4 +1,4 @@
-import nltk, string, math
+import nltk, re, string, math
 from nltk import word_tokenize
 
 def main():
@@ -14,30 +14,32 @@ def main():
 
 
 	closed_class_stop_words = ['a','the','an','and','or','but','about','above','after','along','amid','among',\
-	                           'as','at','by','for','from','in','into','like','minus','near','of','off','on',\
-	                           'onto','out','over','past','per','plus','since','till','to','under','until','up',\
-	                           'via','vs','with','that','can','cannot','could','may','might','must',\
-	                           'need','ought','shall','should','will','would','have','had','has','having','be',\
-	                           'is','am','are','was','were','being','been','get','gets','got','gotten',\
-	                           'getting','seem','seeming','seems','seemed',\
-	                           'enough', 'both', 'all', 'your' 'those', 'this', 'these', \
-	                           'their', 'the', 'that', 'some', 'our', 'no', 'neither', 'my',\
-	                           'its', 'his' 'her', 'every', 'either', 'each', 'any', 'another',\
-	                           'an', 'a', 'just', 'mere', 'such', 'merely' 'right', 'no', 'not',\
-	                           'only', 'sheer', 'even', 'especially', 'namely', 'as', 'more',\
-	                           'most', 'less' 'least', 'so', 'enough', 'too', 'pretty', 'quite',\
-	                           'rather', 'somewhat', 'sufficiently' 'same', 'different', 'such',\
-	                           'when', 'why', 'where', 'how', 'what', 'who', 'whom', 'which',\
-	                           'whether', 'why', 'whose', 'if', 'anybody', 'anyone', 'anyplace', \
-	                           'anything', 'anytime' 'anywhere', 'everybody', 'everyday',\
-	                           'everyone', 'everyplace', 'everything' 'everywhere', 'whatever',\
-	                           'whenever', 'whereever', 'whichever', 'whoever', 'whomever' 'he',\
-	                           'him', 'his', 'her', 'she', 'it', 'they', 'them', 'its', 'their','theirs',\
-	                           'you','your','yours','me','my','mine','I','we','us','much','and/or'
-	                           ]
+       'as','at','by','for','from','in','into','like','minus','near','of','off','on',\
+       'onto','out','over','past','per','plus','since','till','to','under','until','up',\
+       'via','vs','with','that','can','cannot','could','may','might','must',\
+       'need','ought','shall','should','will','would','have','had','has','having','be',\
+       'is','am','are','was','were','being','been','get','gets','got','gotten',\
+       'getting','seem','seeming','seems','seemed',\
+       'enough', 'both', 'all', 'your' 'those', 'this', 'these', \
+       'their', 'the', 'that', 'some', 'our', 'no', 'neither', 'my',\
+       'its', 'his' 'her', 'every', 'either', 'each', 'any', 'another',\
+       'an', 'a', 'just', 'mere', 'such', 'merely' 'right', 'no', 'not',\
+       'only', 'sheer', 'even', 'especially', 'namely', 'as', 'more',\
+       'most', 'less' 'least', 'so', 'enough', 'too', 'pretty', 'quite',\
+       'rather', 'somewhat', 'sufficiently' 'same', 'different', 'such',\
+       'when', 'why', 'where', 'how', 'what', 'who', 'whom', 'which',\
+       'whether', 'why', 'whose', 'if', 'anybody', 'anyone', 'anyplace', \
+       'anything', 'anytime' 'anywhere', 'everybody', 'everyday',\
+       'everyone', 'everyplace', 'everything' 'everywhere', 'whatever',\
+       'whenever', 'whereever', 'whichever', 'whoever', 'whomever' 'he',\
+       'him', 'his', 'her', 'she', 'it', 'they', 'them', 'its', 'their','theirs',\
+       'you','your','yours','me','my','mine','I','we','us','much','and/or'
+       ]
 	file = open('cran/cran.qry', 'r')
 	raw = file.read()
 	abstract_file = open('cran/cran.all.1400')
+
+	#print re.search(r'\d|\W', '')
 
 	sentences = clean(raw, closed_class_stop_words, new_tokens)
 	term_count(sentences, tfidf_vector, word_hash)
@@ -81,7 +83,7 @@ def abstract_clean(file, closed_class_stop_words, new_tokens):
 	return line_array
 
 def abstract_strip(token, closed_class_stop_words):
-	if not (token in closed_class_stop_words or token in string.punctuation or token.isdigit()):
+	if not (token in closed_class_stop_words or re.search(r'\d|\W', token)):
 		return token
 
 # tfidf = term frequency (how many times it appears in query) x idf (total number of queries / number of queries where term occurs)
@@ -105,7 +107,7 @@ def abstract_strip(token, closed_class_stop_words):
 #	# etc
 #]
 
-# these modularized functions aren't time-efficient, but this is currently a brute force method to get some functionality whilst staying somewhat bug-free
+# these modularized functions aren't time-efficient, but this is currently a functional method to get some results whilst staying somewhat bug-free
 
 def term_count(sentences, tfidf_vector, word_hash):
 	for sentence in sentences:
@@ -118,7 +120,7 @@ def term_count(sentences, tfidf_vector, word_hash):
 
 def abstract_term_count(sentences, tfidf_vector, word_hash):
 	return None
-	
+
 def query_count(sentences, query_hash):
 	for sentence in sentences:
 		word_vector = []
