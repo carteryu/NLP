@@ -38,14 +38,13 @@ def main():
 	file = open('cran/cran.qry', 'r')
 	raw = file.read()
 	abstract_file = open('cran/cran.all.1400')
-	abstract_raw = abstract_file.read()
 
 	sentences = clean(raw, closed_class_stop_words, new_tokens)
 	term_count(sentences, tfidf_vector, word_hash)
 	query_count(sentences, query_hash)
 	calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, 225)
 
-	abstract_sentences = abstract_clean(abstract_raw, closed_class_stop_words, abstract_new_tokens)
+	abstract_sentences = abstract_clean(abstract_file, closed_class_stop_words, abstract_new_tokens)
 	abstract_term_count(abstract_sentences, abstract_tfidf_vector, abstract_word_hash)
 	abstract_query_count(abstract_sentences, abstract_query_hash)
 	abstract_calc_tfidf(abstract_sentences, abstract_tfidf_vector, abstract_word_hash, abstract_query_hash, 1400)                           
@@ -61,11 +60,29 @@ def clean(text, closed_class_stop_words, new_tokens):
 			new_tokens[-1].append(token)
 	return new_tokens
 
-def abstract_clean(text, closed_class_stop_words, new_tokens):
-	tokens = word_tokenize(text)
-	for token in tokens:
-		for token in tokens:
-			return None
+def abstract_clean(file, closed_class_stop_words, new_tokens):
+	delete_flag = True
+	line_array = []
+	with file as f:
+		abstract_concat = []
+		for line in f:
+			if line[:2] == ('.W'):
+				delete_flag = False
+			elif line[:2] == '.I':
+				line_array.append(abstract_concat)
+				abstract_concat = []
+				delete_flag = True
+			elif delete_flag == False:
+				tokens = word_tokenize(line)
+				for token in tokens:
+					new_token = abstract_strip(token, closed_class_stop_words)
+					if new_token:
+						abstract_concat.append(new_token)
+	return line_array
+
+def abstract_strip(token, closed_class_stop_words):
+	if not (token in closed_class_stop_words or token in string.punctuation or token.isdigit()):
+		return token
 
 # tfidf = term frequency (how many times it appears in query) x idf (total number of queries / number of queries where term occurs)
 
@@ -101,6 +118,7 @@ def term_count(sentences, tfidf_vector, word_hash):
 
 def abstract_term_count(sentences, tfidf_vector, word_hash):
 	return None
+	
 def query_count(sentences, query_hash):
 	for sentence in sentences:
 		word_vector = []
@@ -134,7 +152,6 @@ def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 				tfidf_vector[-1][word][0] = 1
 				tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
 				tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
-	print tfidf_vector
 
 def abstract_calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 	return None
