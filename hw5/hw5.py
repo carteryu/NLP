@@ -126,13 +126,13 @@ def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 			# calculate tf, idf, tfidf, and round to three decimal places
 			if word in word_vector:
 				tfidf_vector[-1][word][0] += 1
-				tfidf_vector[-1][word][1] = math.floor(float(total_queries) / float(query_hash[word]) * 1000) / 1000
+				tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
 				tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
 			else:
 				word_vector.append(word)
 				tfidf_vector[-1][word] = [None, None, None]
 				tfidf_vector[-1][word][0] = 1
-				tfidf_vector[-1][word][1] = math.floor(float(total_queries) / float(query_hash[word]) * 1000) / 1000
+				tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
 				tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
 	print tfidf_vector
 

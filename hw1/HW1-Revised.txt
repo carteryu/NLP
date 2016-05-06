@@ -1,0 +1,60 @@
+/******************************************************************
+*****Text and Annotation (According to Original Specifications)****
+******************************************************************/
+
+A new/JJ psychology study suggests that some forms of “positive thinking” have limited/JJ value in the fight against depression — and could even be a hindrance.
+The research, published in the journal Psychological Science, found people who fantasized about an idealized/JJ future tended to have fewer depressive/JJ symptoms in the present, but faced more depressive/JJ symptoms in the future.
+
+“The modern/JJ era is marked by a push for ever-positive thinking, and the self-help market fueled by a reliance on such positive thinking is a $9.6 billion industry that continues to grow. Our findings raise questions of how costly/JJ this market may be for people’s long-term/JJ well-being and for society as a whole,” researcher Gabriele Oettingen and her colleagues wrote in their study.
+
+The researchers used questionnaires and daily/JJ diaries in four separate/JJ studies to examine the relationship between positive fantasies about the future and depressive/JJ symptoms in college students and children.
+
+The first study of 88 college students found the more positively/JJ participants fantasized about the future, the fewer/JJ symptoms of depression they showed in the present, but the more/JJ symptoms they showed one month later. 
+
+The second study replicated the first, but with a sample size greater than that of the first study, a younger/JJ sample, and a longer/JJ timeframe. This second/JJ study of 109 fourth- and fifth-grade children found the more positively the children fantasized about the future, the fewer/JJ symptoms of depression they showed at in the present, but the more/JJ symptoms of depression they showed 7 months later.
+
+/******************************************************************
+**************************** Analysis *****************************
+******************************************************************/
+
+“___ than” is a scenario where an adjective would fail the specifications. For example, the adjective “greater” in “greater than” would not be marked as such. 
+
+Additionally, the rule where an adjective have an “s” appended to it (be a plural) fails when applied to words like “positive,” where the words double as nouns and adjectives. 
+
+/******************************************************************
+************************New Specifications ************************
+******************************************************************/
+
+Must be able to fill:
+
+	The ___ noun
+	The noun is ___
+
+or
+	___ than
+
+and cannot fit in:
+	
+	The ___ is
+	___s (unless the word doubles as a noun as well, such as “positive”)
+
+/******************************************************************
+*****Text and New Annotation (According to New Specifications)****
+******************************************************************/
+
+A new/JJ psychology study suggests that some forms of “positive/JJ thinking” have limited/JJ value in the fight against depression — and could even be a hindrance.
+The research, published in the journal Psychological Science, found people who fantasized about an idealized/JJ future tended to have fewer depressive/JJ symptoms in the present, but faced more depressive/JJ symptoms in the future.
+
+“The modern/JJ era is marked by a push for ever-positive/JJ thinking, and the self-help market fueled by a reliance on such positive/JJ thinking is a $9.6 billion industry that continues to grow. Our findings raise questions of how costly/JJ this market may be for people’s long-term/JJ well-being and for society as a whole,” researcher Gabriele Oettingen and her colleagues wrote in their study.
+
+The researchers used questionnaires and daily/JJ diaries in four separate/JJ studies to examine the relationship between positive/JJ fantasies about the future and depressive/JJ symptoms in college students and children.
+
+The first study of 88 college students found the more positively/JJ participants fantasized about the future, the fewer/JJ symptoms of depression they showed in the present, but the more/JJ symptoms they showed one month later.
+
+The second study replicated the first, but with a sample size greater/JJ than that of the first study, a younger/JJ sample, and a longer/JJ timeframe. This second/JJ study of 109 fourth- and fifth-grade children found the more positively the children fantasized about the future, the fewer/JJ symptoms of depression they showed at in the present, but the more/JJ symptoms of depression they showed 7 months later.
+
+/******************************************************************
+**************************Conclusion*******************************
+******************************************************************/
+
+The new specifications tagged several more words as adjectives, most notably instances of “positive” and instances of comparative words such as “greater.” This leads to a more accurate tagging that improved recall by ~20% and reduced the number of missed tags entirely.
