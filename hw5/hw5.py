@@ -13,6 +13,7 @@ def main():
 	final_abstract_vector = []
 
 	final_total_vector = []
+	ranked_list = []
 
 	closed_class_stop_words = ['a','the','an','and','or','but','about','above','after','along','amid','among',\
        'as','at','by','for','from','in','into','like','minus','near','of','off','on',\
@@ -55,8 +56,11 @@ def main():
 	query_vector(sentences, tfidf_vector, final_query_vector)
 	abstract_vector(sentences, abstract_tfidf_vector, final_query_vector, final_abstract_vector)
 	create_final_vector(final_query_vector, final_abstract_vector, final_total_vector)
-	cosine_rank(final_total_vector)
-	print 'cosine similarity calculated'                          
+	print 'cosine similarity calculated'  
+
+	cosine_rank(final_total_vector, ranked_list)
+	print 'ranking finished. results outputted to ranks.txt'
+	                        
 
 def clean(text, closed_class_stop_words):
 	line_array = []
@@ -147,14 +151,14 @@ def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 			if word in word_vector:
 				# consider normalizing the term frequencies
 				tfidf_vector[-1][word][0] += 1
-				tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
-				tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
 			else:
 				word_vector.append(word)
 				tfidf_vector[-1][word] = [None, None, None]
 				tfidf_vector[-1][word][0] = 1
-				tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
-				tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
+			# normalizing with respect to the length of the sentence
+			tfidf_vector[-1][word][0] = float(tfidf_vector[-1][word][0]) / float(len(sentence))
+			tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
+			tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
 
 # final query vector = 
 #[
@@ -209,22 +213,35 @@ def abstract_vector(sentences, abstract_tfidf_vector, final_query_vector, final_
 
 # final total vector = 
 #[
-#	[query number, abstract number, cosine similarity],
-#	[query number, abstract number, cosine similarity],
-#	[query number, abstract number, cosine similarity],
+#	[
+#		[query number, abstract number, cosine similarity],
+#		[query number, abstract number, cosine similarity],
+#		[query number, abstract number, cosine similarity],
+#		etc
+#	],
+#	[
+#		[query number, abstract number, cosine similarity],
+#		[query number, abstract number, cosine similarity],
+#		[query number, abstract number, cosine similarity],
+#		etc
+#	],
 #	etc
 #]
 
 def create_final_vector(final_query_vector, final_abstract_vector, final_total_vector):
 	query_num = 0
 	for query in final_query_vector:
+		final_total_vector.append([])
 		abstract_num = 0
 		for abstract in final_abstract_vector[query_num]:
-			final_total_vector.append([])
-			final_total_vector[-1].append(query_num)
-			final_total_vector[-1].append(abstract_num)
-			final_total_vector[-1].append(cosine_similarity(query, abstract))
+			final_total_vector[-1].append([])
+			final_total_vector[-1][-1].append(query_num)
+			final_total_vector[-1][-1].append(abstract_num)
+			cosine_num = cosine_similarity(query, abstract)
+			final_total_vector[-1][-1].append(cosine_num)
 			abstract_num += 1
+			if cosine_num == 0:
+				final_total_vector[-1].pop()
 		query_num += 1
 
 def cosine_similarity(query, abstract):
@@ -240,12 +257,24 @@ def cosine_similarity(query, abstract):
 	if not (query_magnitude * abstract_magnitude == 0):
 		cosine_similarity = math.floor(dot_product / (query_magnitude * abstract_magnitude) * 1000) / 1000
 	else:
-		cosine_similarity = None
+		# returning a cosine similarity of zero if denominator is zero
+		cosine_similarity = 0
 	return cosine_similarity
 
-def cosine_rank(vector):
-	return None
-
+def cosine_rank(vector, ranked_list):
+	for cluster in vector:
+		cluster.sort(key=lambda x: x[2])
+		cluster.reverse()
+		ranked_list.append(cluster)
+	f = open('ranks.txt','w')
+	for cluster in ranked_list:
+		for rank in cluster:
+			rank_one = rank[0] + 1
+			rank_two = rank[1] + 1
+			rank_three = rank[2]
+			line = str(rank_one) + ' ' + str(rank_two) + ' '  + str(rank_three)
+			f.write(line + '\n')
+	
 main()
 
 
