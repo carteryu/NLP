@@ -12,6 +12,7 @@ def main():
 	abstract_tfidf_vector = []
 	final_abstract_vector = []
 
+	final_total_vector = []
 
 	closed_class_stop_words = ['a','the','an','and','or','but','about','above','after','along','amid','among',\
        'as','at','by','for','from','in','into','like','minus','near','of','off','on',\
@@ -53,7 +54,8 @@ def main():
 
 	query_vector(sentences, tfidf_vector, final_query_vector)
 	abstract_vector(sentences, abstract_tfidf_vector, final_query_vector, final_abstract_vector)
-	cosine_similarity(tfidf_vector, abstract_tfidf_vector)
+	create_final_vector(final_query_vector, final_abstract_vector, final_total_vector)
+	cosine_rank(final_total_vector)
 	print 'cosine similarity calculated'                          
 
 def clean(text, closed_class_stop_words):
@@ -137,7 +139,7 @@ def query_count(sentences, query_hash):
 
 def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 	for sentence in sentences:
-		tfidf_vector.append({	})
+		tfidf_vector.append({})
 		word_vector = []
 		for word in sentence:
 			word = word.lower()
@@ -154,7 +156,7 @@ def calc_tfidf(sentences, tfidf_vector, word_hash, query_hash, total_queries):
 				tfidf_vector[-1][word][1] = math.floor(math.log(float(total_queries) / float(query_hash[word])) * 1000) / 1000
 				tfidf_vector[-1][word][2] = math.floor(tfidf_vector[-1][word][0] * tfidf_vector[-1][word][1] * 1000) / 1000
 
-# query vector = 
+# final query vector = 
 #[
 #	[tfidf value 1, tfidf value 2, tfidf value 3, etc], 
 #	[tfidf value 1, tfidf value 2, tfidf value 3, etc],
@@ -171,7 +173,7 @@ def query_vector(sentences, tfidf_vector, final_query_vector):
 				final_query_vector[-1].append(tfidf_vector[counter].get(word)[2])
 		counter += 1
 
-# abstract vector = 
+# final abstract vector = 
 #[
 #	[
 #		[tfidf value 1, tfidf value 2, tfidf value 3, etc], 
@@ -190,23 +192,58 @@ def query_vector(sentences, tfidf_vector, final_query_vector):
 
 def abstract_vector(sentences, abstract_tfidf_vector, final_query_vector, final_abstract_vector):
 	counter = 0
+	tencount = 0
+	gtencount = 0
 	for sentence in sentences:
 		final_abstract_vector.append([])
 		for abstract in abstract_tfidf_vector:
 		 	final_abstract_vector[-1].append([])
 		 	for word in sentence:
-		 		final_abstract_vector[-1][-1].append(word)
 		 		if abstract.get(word):
 					final_abstract_vector[-1][-1].append(abstract.get(word)[2])
 		 		else:
 		 			final_abstract_vector[-1][-1].append(0)
 		 	counter += 1
-	print final_abstract_vector
-
 
 # cosine similarity (d1, d2) =  dot product(d1, d2) / ||d1|| * ||d2||
 
-def cosine_similarity(tfidf_vector, abstract_tfidf_vector):
+# final total vector = 
+#[
+#	[query number, abstract number, cosine similarity],
+#	[query number, abstract number, cosine similarity],
+#	[query number, abstract number, cosine similarity],
+#	etc
+#]
+
+def create_final_vector(final_query_vector, final_abstract_vector, final_total_vector):
+	query_num = 0
+	for query in final_query_vector:
+		abstract_num = 0
+		for abstract in final_abstract_vector[query_num]:
+			final_total_vector.append([])
+			final_total_vector[-1].append(query_num)
+			final_total_vector[-1].append(abstract_num)
+			final_total_vector[-1].append(cosine_similarity(query, abstract))
+			abstract_num += 1
+		query_num += 1
+
+def cosine_similarity(query, abstract):
+	dot_product = 0
+	query_magnitude = 0
+	abstract_magnitude = 0
+	for i in range(len(query)):
+		dot_product += (query[i] * abstract[i])
+		query_magnitude += query[i] ** 2
+		abstract_magnitude += abstract[i] ** 2
+	query_magnitude = query_magnitude ** 0.5
+	abstract_magnitude = abstract_magnitude ** 0.5
+	if not (query_magnitude * abstract_magnitude == 0):
+		cosine_similarity = math.floor(dot_product / (query_magnitude * abstract_magnitude) * 1000) / 1000
+	else:
+		cosine_similarity = None
+	return cosine_similarity
+
+def cosine_rank(vector):
 	return None
 
 main()
